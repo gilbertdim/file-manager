@@ -6,7 +6,13 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { all } from '@fortawesome/fontawesome-free'
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+library.add(...all)
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -15,7 +21,8 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .mount(el);
+            .mount(el)
+            .component('font-awesome-icon', FontAwesomeIcon);
     },
     progress: {
         color: '#4B5563',

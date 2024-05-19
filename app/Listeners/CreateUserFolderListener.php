@@ -16,10 +16,9 @@ class CreateUserFolderListener
     {
         $user = $event->user;
 
-        $folder = File::create([
-            'name' => $user->id,
-            'is_folder' => true,
-        ]);
+        $folder = new File();
+        $folder->name = $user->email;
+        $folder->is_folder = true;
 
         $folder->makeRoot()
             ->save();

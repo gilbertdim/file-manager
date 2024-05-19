@@ -2,15 +2,21 @@
 
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import {useForm} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {useForm, usePage} from "@inertiajs/vue3";
+import {ref, watch, watchEffect} from "vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+const $toast = useToast();
 
 const form = useForm({
-    name: ''
+    name: '',
+    parent_id: null
 });
+const page = usePage();
 
 const folderNameInput = ref(null)
 
@@ -26,12 +32,22 @@ watch(props, () => {
     }
 });
 
+watchEffect(() => {
+    if (folderNameInput.value) {
+        folderNameInput.value.focus()
+    }
+})
+
 function create(event)
 {
-    form.post(route('folder.create'), {
+    event.preventDefault();
+
+    form.parent_id = page.props.folder.id;
+    form.put(route('folders.create'), {
         preserveScroll: true,
         onSuccess: () => {
-
+            $toast.success('Folder created')
+            close()
         },
         onError: () => folderNameInput.value.focus()
     })
@@ -64,6 +80,8 @@ function close()
         <template #content>
             <!-- Modal body -->
             <form>
+                <input hidden name="csrf-token" value="{{ csrf_token() }}">
+
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <InputLabel for="folderName" value="Folder" class="sr-only"/>

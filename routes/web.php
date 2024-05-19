@@ -53,14 +53,10 @@ Route::middleware([
 ])->group(function () {
     Route::controller(FileController::class)
         ->group(function () {
-            Route::get('/', 'index')->name('home');
+            Route::get('/home', 'index')->name('home');
+            Route::get('/home/{folder}', 'folder')
+                ->where('folder', '.*')->name('folder');
             Route::get('shared', 'shared')->name('shared');
             Route::get('trash', 'trash')->name('trash');
-        });
-
-    Route::controller()
-        ->prefix('folder.')
-        ->group(function () {
-
         });
 });

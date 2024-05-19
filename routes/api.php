@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+ Route::middleware('auth:sanctum')
+    ->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::put('folder/create', [\App\Http\Controllers\FolderController::class, 'create'])->name('folders.create');
+
 });
